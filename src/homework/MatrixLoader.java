@@ -1,7 +1,9 @@
 package homework;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -25,7 +27,16 @@ public class MatrixLoader {
 		return array;
 	}	
 	
-	public void saveMatrix(String path) throws IOException{
-		
+	public void saveMatrix(String path, Matrix result) throws IOException{
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(path));
+		dos.writeInt(result.getRow());
+		dos.writeInt(result.getCol());
+		double[][] array = result.getMatrix();
+		for (int i = 0; i < result.getRow(); i++) {
+			for (int j = 0; j < result.getCol(); j++) {
+				dos.writeDouble(array[i][j]);
+			}
+		}
+		dos.close();
 	}
 }

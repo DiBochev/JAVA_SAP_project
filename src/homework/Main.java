@@ -28,5 +28,10 @@ public class Main {
 		result.multiplyThreading(left.getMatrix(), right.getMatrix());
 		System.out.println("time for linear thread multiply: " + (System.currentTimeMillis() - temp));
 	
+		try {
+			load.saveMatrix("D:\\result2", result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
