@@ -3,6 +3,7 @@ package homework;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
 public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		
@@ -12,14 +13,8 @@ public class Main {
 		
 		MatrixLoader load = new MatrixLoader();
 		try {
-			
 			left.setMatrix(load.loadMatrix("D:\\left"));
-			left.setCol(load.getCol());
-			left.setRow(load.getRow());
-			
 			right.setMatrix(load.loadMatrix("D:\\right"));
-			right.setCol(load.getCol());
-			right.setRow(load.getRow());
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -27,10 +22,11 @@ public class Main {
 		
 		long temp = System.currentTimeMillis();
 		result.setMatrix(left.multiply(right.getMatrix()));
-		System.out.println(System.currentTimeMillis() - temp);
+		System.out.println("time for linear multiply: " + (System.currentTimeMillis() - temp));
 		
 		temp = System.currentTimeMillis();
-		result.setMatrix(left.multiplyThreading(right.getMatrix()));
-		System.out.println(System.currentTimeMillis() - temp);
+		result.multiplyThreading(left.getMatrix(), right.getMatrix());
+		System.out.println("time for linear thread multiply: " + (System.currentTimeMillis() - temp));
+	
 	}
 }
