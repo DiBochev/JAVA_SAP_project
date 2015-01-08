@@ -1,5 +1,8 @@
 package homework;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class Matrix {
 
@@ -48,9 +51,7 @@ public class Matrix {
 		 int columnsInA = leftMatrix[0].length;
 	     int columnsInB = rightMatrix[0].length;
 	     Matrix = new double[rowsInA][columnsInB];
-	       
 	       for (int i = 0; i < rowsInA; i++) {
-	    	   System.out.println("thread " + i);
 	    	   final int i2 = i;
 	    	   new Thread(){
 	    		   public void run(){
@@ -63,4 +64,54 @@ public class Matrix {
 	    	   }.start();
 	       }
 	 	}
+	 
+	 public void multiplyThreading(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
+		 
+		 int rowsInA = leftMatrix.length;
+		 int columnsInA = leftMatrix[0].length;
+	     int columnsInB = rightMatrix[0].length;
+	     Matrix = new double[rowsInA][columnsInB];
+	     ArrayList<Thread> threads = new ArrayList<Thread>();
+	     
+	     //creating the threads
+	     for (int i = 0; i < threadsNumber; i++) {
+	    	 final int i2 = i;
+	    	 threads.add(new Thread(){
+	    		 
+	    		 private int numberOfThread = i2;
+	    		 public void run(){
+	    			 for (int i = numberOfThread; i < rowsInA; i+= threadsNumber) {
+	    				 for (int k = 0; k < columnsInA; k++) {
+	    		    		   for (int j = 0; j < columnsInB; j++) {
+	    		    			   Matrix[i][j] = Matrix[i][j] + leftMatrix[i][k] * rightMatrix[k][j];
+	    		    		   }
+	    		    	   }
+//	    		    	   if ((i + threadsNumber) > rowsInA) {
+//	    		    		   break;
+//	    		    	   }
+	    			 }
+	    		 }	 
+	    	 });
+	     }
+	     
+	     for (Thread thread : threads) {
+			thread.start();
+		}
+	 }
+
+	 
+	public boolean equals(Matrix m) {
+		if (this == m)
+			return true;
+		if (m == null)
+			return false;
+		if (getClass() != m.getClass())
+			return false;
+		Matrix other = (Matrix) m;
+		if (!Arrays.deepEquals(Matrix, other.Matrix))
+			return false;
+		return true;
+	}
+
+	 
 }
