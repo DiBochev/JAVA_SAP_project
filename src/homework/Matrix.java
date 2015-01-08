@@ -1,6 +1,5 @@
 package homework;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -51,9 +50,10 @@ public class Matrix {
 		 int columnsInA = leftMatrix[0].length;
 	     int columnsInB = rightMatrix[0].length;
 	     Matrix = new double[rowsInA][columnsInB];
+	     Thread[] threads = new Thread[rowsInA];
 	       for (int i = 0; i < rowsInA; i++) {
 	    	   final int i2 = i;
-	    	   new Thread(){
+	    	   threads[i] = new Thread(){
 	    		   public void run(){
 	    			   for (int k = 0; k < columnsInA; k++) {
 	    				   for (int j = 0; j < columnsInB; j++) {
@@ -61,8 +61,17 @@ public class Matrix {
 	    				   }
 	    			   }
 	    		   }
-	    	   }.start();
+	    		   
+	    	   };
+	    	   threads[i].start();
 	       }
+	       for (Thread thread : threads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	 	}
 	 
 	 public void multiplyThreading(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
@@ -71,13 +80,12 @@ public class Matrix {
 		 int columnsInA = leftMatrix[0].length;
 	     int columnsInB = rightMatrix[0].length;
 	     Matrix = new double[rowsInA][columnsInB];
-	     ArrayList<Thread> threads = new ArrayList<Thread>();
+	     Thread threads[] = new Thread[threadsNumber];
 	     
 	     //creating the threads
 	     for (int i = 0; i < threadsNumber; i++) {
 	    	 final int i2 = i;
-	    	 threads.add(new Thread(){
-	    		 
+	    	 threads[i] = new Thread(){
 	    		 private int numberOfThread = i2;
 	    		 public void run(){
 	    			 for (int i = numberOfThread; i < rowsInA; i+= threadsNumber) {
@@ -86,17 +94,22 @@ public class Matrix {
 	    		    			   Matrix[i][j] = Matrix[i][j] + leftMatrix[i][k] * rightMatrix[k][j];
 	    		    		   }
 	    		    	   }
-//	    		    	   if ((i + threadsNumber) > rowsInA) {
-//	    		    		   break;
-//	    		    	   }
 	    			 }
 	    		 }	 
-	    	 });
+	    	 };
 	     }
 	     
 	     for (Thread thread : threads) {
 			thread.start();
 		}
+	     for (Thread thread : threads) {
+				try {
+					thread.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 	 }
 
 	 

@@ -11,7 +11,8 @@ public class Main {
 		Matrix right = new Matrix();
 		Matrix resultSAP = new Matrix();
 		Matrix result = new Matrix();
-		Matrix result2 = new Matrix();
+		Matrix asynch = new Matrix();
+		Matrix asynchWithThreadChoise = new Matrix();
 		
 		MatrixLoader load = new MatrixLoader();
 		
@@ -30,20 +31,26 @@ public class Main {
 		
 		
 		temp = System.currentTimeMillis();
-		result2.multiplyThreading(left.getMatrix(), right.getMatrix());
+		asynch.multiplyThreading(left.getMatrix(), right.getMatrix());
 		System.out.println("time for threads multiply: " + (System.currentTimeMillis() - temp));
 		
 		
+		temp = System.currentTimeMillis();
+		asynchWithThreadChoise.multiplyThreading(left.getMatrix(), right.getMatrix(), 15);
+		System.out.printf("time for %d threads multiply: " + (System.currentTimeMillis() - temp), 15);
+		System.out.println();
+		
 		System.out.println("result and resultSAP " + result.equals(resultSAP));
-		System.out.println("result2 and resultSAP " + result2.equals(resultSAP));
-		System.out.println("result and result2 " + result.equals(result2));
+		System.out.println("asynch and resultSAP " + asynch.equals(resultSAP));
+		System.out.println("result and asynch " + result.equals(asynch));
+		System.out.println("asynchWithThreadChoise and resultSAP " + asynchWithThreadChoise.equals(resultSAP));
 		
 		
-//		try {
-//			load.saveMatrix("D:\\result2", result);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			load.saveMatrix("D:\\result2", result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	
 		
