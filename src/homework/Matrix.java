@@ -112,7 +112,6 @@ public class Matrix {
 			}
 	 }
 
-	 
 	public boolean equals(Matrix m) {
 		if (this == m)
 			return true;
@@ -125,6 +124,5 @@ public class Matrix {
 			return false;
 		return true;
 	}
-
 	 
 }

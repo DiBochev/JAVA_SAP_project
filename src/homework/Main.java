@@ -36,8 +36,8 @@ public class Main {
 		
 		
 		temp = System.currentTimeMillis();
-		asynchWithThreadChoise.multiplyThreading(left.getMatrix(), right.getMatrix(), 15);
-		System.out.printf("time for %d threads multiply: " + (System.currentTimeMillis() - temp), 15);
+		asynchWithThreadChoise.multiplyThreading(left.getMatrix(), right.getMatrix(), 8);
+		System.out.printf("time for %d threads multiply: " + (System.currentTimeMillis() - temp), 8);
 		System.out.println();
 		
 		System.out.println("result and resultSAP " + result.equals(resultSAP));
