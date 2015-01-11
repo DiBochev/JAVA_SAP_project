@@ -9,6 +9,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		System.out.println("some change");
+		
 		Matrix left = new Matrix();
 		Matrix right = new Matrix();
 		Matrix resultSAP = new Matrix();
