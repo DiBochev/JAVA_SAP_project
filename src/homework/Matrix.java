@@ -1,6 +1,9 @@
 package homework;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 public class Matrix {
@@ -104,10 +107,39 @@ public class Matrix {
 	    	 try {
 	    		 thread.join();
 	    	 } catch (InterruptedException e) {
-	    		 // TODO Auto-generated catch block
-	    		 e.printStackTrace();
+	    		 e.getMessage();
 	    	 }
 	     }
+	 }
+ public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
+		 
+		 int rowsInA = leftMatrix.length;
+		 int columnsInA = leftMatrix[0].length;
+	     int columnsInB = rightMatrix[0].length;
+	     Matrix = new double[rowsInA][columnsInB];
+	     ExecutorService pool = Executors.newFixedThreadPool(threadsNumber);
+	     for (int i = 0; i < threadsNumber; i++) {
+	    	 final int i2 = i;
+	    	 pool.execute(new Runnable() {
+	    		 private int numberOfThread = i2;
+	    		 public void run() {
+	    			 for (int i = numberOfThread; i < rowsInA; i+= threadsNumber) {
+	    				 for (int k = 0; k < columnsInA; k++) {
+	    					 for (int j = 0; j < columnsInB; j++) {
+	    						 Matrix[i][j] = Matrix[i][j] + leftMatrix[i][k] * rightMatrix[k][j];
+	    					 }
+	    				 }
+	    			 }
+	    		 }
+	    	 });
+	     }
+	     //pool.shutdown();
+	     try {
+			pool.awaitTermination(300, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	 }
 
 	public boolean equals(Matrix m) {

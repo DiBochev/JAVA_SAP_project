@@ -17,6 +17,7 @@ public class Main {
 		Matrix result = new Matrix();
 		Matrix asynch = new Matrix();
 		Matrix asynchWithThreadChoise = new Matrix();
+		Matrix asynchWithPool = new Matrix();
 		
 		
 		System.out.println("loading files");
@@ -42,6 +43,13 @@ public class Main {
 		temp = System.currentTimeMillis();
 		asynchWithThreadChoise.multiplyThreading(left.getMatrix(), right.getMatrix(), 8);			
 		System.out.printf("time for %d threads multiply: " + (System.currentTimeMillis() - temp), 8);
+		System.out.println();
+		
+		
+		temp = System.currentTimeMillis();
+		asynchWithPool.multiplyPool(left.getMatrix(), right.getMatrix(), 8);			
+		System.out.println("time for pool: " + (System.currentTimeMillis() - temp));
+		
 		
 		
 		System.out.println();
@@ -49,25 +57,15 @@ public class Main {
 		System.out.println("asynch and resultSAP " + asynch.equals(resultSAP));
 		System.out.println("result and asynch " + result.equals(asynch));
 		System.out.println("asynchWithThreadChoise and resultSAP " + asynchWithThreadChoise.equals(resultSAP));
+		System.out.println("asynch with pool and SAP " + asynchWithPool.equals(resultSAP));
+		
+		
 		
 		try {
 			MatrixLoader.saveMatrix("D:\\result2", result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		ExecutorService threadExecutor = Executors.newCachedThreadPool(); 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	private static void loadMatrixAsynch(Matrix[] matrix){
