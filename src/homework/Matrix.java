@@ -3,7 +3,6 @@ package homework;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 
 public class Matrix {
@@ -27,82 +26,51 @@ public class Matrix {
 		return Matrix;
 	}
 
-	public void setMatrix(double[][] ds) {
-		this.Matrix = ds;
+	public void setMatrix(double[][] array) {
+		this.Matrix = array;
+	}
+
+	public String getPath() {
+		return path;
 	}
 	
-	public double[][] multiply(double[][] rightMatrix) {
-	       int columnsInRightMatrix = rightMatrix[0].length;
-	       double[][] temp = new double[getRow()][columnsInRightMatrix];
-	       for (int i = 0; i < getRow(); i++) {
-	    	   for (int k = 0; k < getCol(); k++) {
-	    		   for (int j = 0; j < columnsInRightMatrix; j++) {
-	            	   temp[i][j] = temp[i][j] + Matrix[i][k] * rightMatrix[k][j];
-	               }
-	           }
-	       }
-	       return temp;
-	   }
-	
-	 public void multiplyThreading(double[][] leftMatrix, double[][] rightMatrix) {
-		 int rowsInA = leftMatrix.length;
-		 int columnsInA = leftMatrix[0].length;
-	     int columnsInB = rightMatrix[0].length;
-	     Matrix = new double[rowsInA][columnsInB];
-	     Thread[] threads = new Thread[rowsInA];
+	public void setPath(String path) {
+		this.path = path;
+	}
 
-	     for (int i = 0; i < rowsInA; i++) {
-	    	 final int i2 = i;
-	    	 threads[i] = new Thread(){
-	    		 public void run(){
-	    			 for (int k = 0; k < columnsInA; k++) {
-	    				 for (int j = 0; j < columnsInB; j++) {
-	    					   Matrix[i2][j] = Matrix[i2][j] + leftMatrix[i2][k] * rightMatrix[k][j];
-	    				 }
-	    			 }
-	    		 }	   
-	    	 };
-	    	 threads[i].start();
-	     }
-	       
-	       
-	       for (Thread thread : threads) {
-	    	   try {
-	    		   thread.join();
-	    	   } catch (InterruptedException e) {
-	    		   e.printStackTrace();
-	    	   }
-	       }
-	 }
-	 
-	 public void multiplyThreading(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
-		 
-		 int rowsInA = leftMatrix.length;
-		 int columnsInA = leftMatrix[0].length;
-	     int columnsInB = rightMatrix[0].length;
-	     Matrix = new double[rowsInA][columnsInB];
-	     Thread threads[] = new Thread[threadsNumber];
+	private void multiplyCore(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber, final int numberOfCurrentThread) {
+		for (int i = numberOfCurrentThread; i < leftMatrix.getRow(); i+= threadsNumber) {
+			for (int k = 0; k < leftMatrix.getCol(); k++) {
+				for (int j = 0; j < rightMatrix.getCol(); j++) {
+					Matrix[i][j] = Matrix[i][j] + leftMatrix.getMatrix()[i][k] * rightMatrix.getMatrix()[k][j];
+				}
+			}
+		}
+	}	 
+	
+	public void linearMultiply(Matrix leftMatrix, Matrix rightMatrix) {
+	    Matrix = new double[leftMatrix.getRow()][rightMatrix.getCol()];
+	    multiplyCore(leftMatrix, rightMatrix, 1, 0);
+	}	
+	
+	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber) {
+		 Thread threads[] = new Thread[threadsNumber];
+	     Matrix = new double[leftMatrix.getRow()][rightMatrix.getCol()];
 	     
 	     //creating the threads
 	     for (int i = 0; i < threadsNumber; i++) {
-	    	 final int i2 = i;
+	    	 final int numberOfCurrentThread = i;
 	    	 threads[i] = new Thread(){
-	    		 private int numberOfThread = i2;
 	    		 public void run(){
-	    			 for (int i = numberOfThread; i < rowsInA; i+= threadsNumber) {
-	    				 for (int k = 0; k < columnsInA; k++) {
-	    		    		   for (int j = 0; j < columnsInB; j++) {
-	    		    			   Matrix[i][j] = Matrix[i][j] + leftMatrix[i][k] * rightMatrix[k][j];
-	    		    		   }
-	    				 }
-	    			 }
-	    		 }	 
+	    			 multiplyCore(leftMatrix, rightMatrix, threadsNumber, numberOfCurrentThread);	 
+	    		 }
 	    	 };
 	     }
-	     
+	     //start every threads
 	     for (Thread thread : threads) {
 			thread.start();
 	     }
+	     //join every threads
 	     for (Thread thread : threads) {
 	    	 try {
 	    		 thread.join();
@@ -111,7 +79,16 @@ public class Matrix {
 	    	 }
 	     }
 	 }
- public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
+		 //unused
+	public void multiplyThreadingDefaultCores(Matrix leftMatrix, Matrix rightMatrix){
+		 multiplyThreading(leftMatrix, rightMatrix, Runtime.getRuntime().availableProcessors());
+	 }
+	 
+	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix) {
+		 multiplyThreading(leftMatrix, rightMatrix, leftMatrix.getRow());
+	 }
+	 
+	public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
 		 
 		 int rowsInA = leftMatrix.length;
 		 int columnsInA = leftMatrix[0].length;
@@ -133,13 +110,14 @@ public class Matrix {
 	    		 }
 	    	 });
 	     }
-	     //pool.shutdown();
-	     try {
-			pool.awaitTermination(300, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	     pool.shutdown();
+	     while (!pool.isTerminated()){ 
+	    	 try {
+				Thread.sleep(2);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	     }
 	 }
 
 	public boolean equals(Matrix m) {
@@ -155,12 +133,4 @@ public class Matrix {
 		return true;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-	 
 }
