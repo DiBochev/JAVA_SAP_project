@@ -85,7 +85,7 @@ public class Matrix {
 	    	 }
 	     }
 	 }
-		 //unused
+	
 	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix) {
 		multiplyThreading(leftMatrix, rightMatrix, leftMatrix.getRow());
 	}
@@ -95,7 +95,7 @@ public class Matrix {
 	}
 	 
 	 
-	public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
+	public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber)throws IllegalArgumentException {
 		
 		if (threadsNumber < 1) {
             throw new IllegalArgumentException("Cores number cannot be non-positive!");

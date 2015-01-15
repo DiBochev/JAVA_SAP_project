@@ -29,13 +29,13 @@ public final class IOFileManager {
 				}
 			};
 			threadArray[i].start();
-			if (matrix[CurrentThread].getMatrix() == null) {
-				throw new IOException("file not found or empty file");
-			}
 		}
-		for (Thread thread : threadArray) {
+		for (int i = 0; i < threadArray.length; i++) {
 			try {
-				thread.join();
+				threadArray[i].join();
+				if (matrix[i].getMatrix() == null) {
+					throw new IOException("file not found or empty file");
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

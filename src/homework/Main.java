@@ -66,7 +66,11 @@ public class Main {
 		
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
-			asynchWithPool.multiplyPool(left.getMatrix(), right.getMatrix(), 8);						
+			try{
+				asynchWithPool.multiplyPool(left.getMatrix(), right.getMatrix(), 8);						
+			}catch(IllegalArgumentException e){
+				e.printStackTrace();
+			}
 		}
 		System.out.println("time for pool: " + (System.currentTimeMillis() - time));
 		
