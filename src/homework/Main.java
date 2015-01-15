@@ -25,7 +25,15 @@ public class Main {
 		right.setPath(pathToRightMatrix);
 		resultSAP.setPath(pathToResultSAPMatrix);
 		Matrix[] matrix = {left, right, resultSAP};
-		IOFileManager.loadMatrixAsynch(matrix);
+		try {
+			IOFileManager.loadMatrixAsynch(matrix);
+		} catch (IllegalArgumentException e1) {
+			Thread.currentThread().destroy();
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			Thread.currentThread().destroy();
+		}
 		System.out.println("loaded files for: " + (System.currentTimeMillis() - time) + " ms");
 		
 		

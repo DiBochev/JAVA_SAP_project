@@ -12,23 +12,26 @@ public final class IOFileManager {
 	private IOFileManager(){
 	}
 	
-	public static void loadMatrixAsynch(Matrix[] matrix){
+	public static void loadMatrixAsynch(Matrix[] matrix) throws IllegalArgumentException, IOException {
 		Thread[] threadArray = new Thread[matrix.length];
 		for (int i = 0; i < threadArray.length; i++) {
 			final int CurrentThread = i;
+			if (matrix[CurrentThread].getPath() == null) {
+				throw new IllegalArgumentException("matrix " + CurrentThread + " has no path");
+			}
 			threadArray[i] = new Thread(){
 				public void run() {
 					try {
 						matrix[CurrentThread].setMatrix(loadMatrix(matrix[CurrentThread].getPath()));
-						if (matrix[CurrentThread].getMatrix() == null) {
-							throw new IOException("file not found or empty file");
-						}
 					} catch (IOException e) {
-						e.getMessage();
+						e.printStackTrace();
 					}
 				}
 			};
 			threadArray[i].start();
+			if (matrix[CurrentThread].getMatrix() == null) {
+				throw new IOException("file not found or empty file");
+			}
 		}
 		for (Thread thread : threadArray) {
 			try {

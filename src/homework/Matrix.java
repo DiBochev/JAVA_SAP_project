@@ -38,7 +38,10 @@ public class Matrix {
 		this.path = path;
 	}
 
-	private void multiplyCore(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber, final int numberOfCurrentThread) {
+	private void multiplyCore(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber, final int numberOfCurrentThread) throws IllegalArgumentException{
+		if (threadsNumber < 1) {
+            throw new IllegalArgumentException("Cores number cannot be non-positive!");
+        }
 		for (int i = numberOfCurrentThread; i < leftMatrix.getRow(); i+= threadsNumber) {
 			for (int k = 0; k < leftMatrix.getCol(); k++) {
 				for (int j = 0; j < rightMatrix.getCol(); j++) {
@@ -54,7 +57,10 @@ public class Matrix {
 	}	
 	
 	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber) {
-		 Thread threads[] = new Thread[threadsNumber];
+		if (threadsNumber <= 0) {
+            throw new IllegalArgumentException("Cores number cannot be non-positive!");
+        } 
+		Thread threads[] = new Thread[threadsNumber];
 	     Matrix = new double[leftMatrix.getRow()][rightMatrix.getCol()];
 	     
 	     //creating the threads
@@ -80,16 +86,21 @@ public class Matrix {
 	     }
 	 }
 		 //unused
+	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix) {
+		multiplyThreading(leftMatrix, rightMatrix, leftMatrix.getRow());
+	}
+	
 	public void multiplyThreadingDefaultCores(Matrix leftMatrix, Matrix rightMatrix){
 		 multiplyThreading(leftMatrix, rightMatrix, Runtime.getRuntime().availableProcessors());
-	 }
+	}
 	 
-	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix) {
-		 multiplyThreading(leftMatrix, rightMatrix, leftMatrix.getRow());
-	 }
 	 
 	public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber) {
-		 
+		
+		if (threadsNumber < 1) {
+            throw new IllegalArgumentException("Cores number cannot be non-positive!");
+        }
+		
 		 int rowsInA = leftMatrix.length;
 		 int columnsInA = leftMatrix[0].length;
 	     int columnsInB = rightMatrix[0].length;
