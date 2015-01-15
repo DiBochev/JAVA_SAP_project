@@ -27,13 +27,11 @@ public class Main {
 		Matrix[] matrix = {left, right, resultSAP};
 		try {
 			IOFileManager.loadMatrixAsynch(matrix);
-		} catch (IllegalArgumentException e1) {
-			Thread.currentThread().destroy();
+		} catch (IllegalArgumentException | IOException e1) {
+			Thread.currentThread().setDaemon(true);
 			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			Thread.currentThread().destroy();
 		}
+		
 		System.out.println("loaded files for: " + (System.currentTimeMillis() - time) + " ms");
 		
 		
