@@ -31,7 +31,6 @@ public class Main {
 			Thread.currentThread().setDaemon(true);
 			e1.printStackTrace();
 		}
-		
 		System.out.println("loaded files for: " + (System.currentTimeMillis() - time) + " ms");
 		
 		
@@ -67,7 +66,7 @@ public class Main {
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			try{
-				asynchWithPool.multiplyPool(left.getMatrix(), right.getMatrix(), 8);						
+				asynchWithPool.multiplyPool(left, right, 8);						
 			}catch(IllegalArgumentException e){
 				e.printStackTrace();
 			}

@@ -56,36 +56,6 @@ public class Matrix {
 	    multiplyCore(leftMatrix, rightMatrix, 1, 0);
 	}	
 	
-	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber) {
-		if (threadsNumber <= 0) {
-            throw new IllegalArgumentException("Cores number cannot be non-positive!");
-        } 
-		Thread threads[] = new Thread[threadsNumber];
-	     Matrix = new double[leftMatrix.getRow()][rightMatrix.getCol()];
-	     
-	     //creating the threads
-	     for (int i = 0; i < threadsNumber; i++) {
-	    	 final int numberOfCurrentThread = i;
-	    	 threads[i] = new Thread(){
-	    		 public void run(){
-	    			 multiplyCore(leftMatrix, rightMatrix, threadsNumber, numberOfCurrentThread);	 
-	    		 }
-	    	 };
-	     }
-	     //start every threads
-	     for (Thread thread : threads) {
-			thread.start();
-	     }
-	     //join every threads
-	     for (Thread thread : threads) {
-	    	 try {
-	    		 thread.join();
-	    	 } catch (InterruptedException e) {
-	    		 e.getMessage();
-	    	 }
-	     }
-	 }
-	
 	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix) {
 		multiplyThreading(leftMatrix, rightMatrix, leftMatrix.getRow());
 	}
@@ -94,27 +64,22 @@ public class Matrix {
 		 multiplyThreading(leftMatrix, rightMatrix, Runtime.getRuntime().availableProcessors());
 	}
 	 
-	 
-	public void multiplyPool(double[][] leftMatrix, double[][] rightMatrix, int threadsNumber)throws IllegalArgumentException {
-		
+	public void multiplyPool(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber)throws IllegalArgumentException {
 		if (threadsNumber < 1) {
-            throw new IllegalArgumentException("Cores number cannot be non-positive!");
+            throw new IllegalArgumentException("Cores number cannot be non-positive or 0!");
         }
-		
-		 int rowsInA = leftMatrix.length;
-		 int columnsInA = leftMatrix[0].length;
-	     int columnsInB = rightMatrix[0].length;
-	     Matrix = new double[rowsInA][columnsInB];
+	     Matrix = new double[leftMatrix.getRow()][rightMatrix.getCol()];
 	     ExecutorService pool = Executors.newFixedThreadPool(threadsNumber);
+	     
 	     for (int i = 0; i < threadsNumber; i++) {
 	    	 final int i2 = i;
-	    	 pool.execute(new Runnable() {
+	    	 pool.submit(new Runnable() {
 	    		 private int numberOfThread = i2;
 	    		 public void run() {
-	    			 for (int i = numberOfThread; i < rowsInA; i+= threadsNumber) {
-	    				 for (int k = 0; k < columnsInA; k++) {
-	    					 for (int j = 0; j < columnsInB; j++) {
-	    						 Matrix[i][j] = Matrix[i][j] + leftMatrix[i][k] * rightMatrix[k][j];
+	    			 for (int i = numberOfThread; i < leftMatrix.getRow(); i+= threadsNumber) {
+	    				 for (int k = 0; k < leftMatrix.getCol(); k++) {
+	    					 for (int j = 0; j < rightMatrix.getCol(); j++) {
+	    						 Matrix[i][j] = Matrix[i][j] + leftMatrix.getMatrix()[i][k] * rightMatrix.getMatrix()[k][j];
 	    					 }
 	    				 }
 	    			 }
@@ -130,7 +95,39 @@ public class Matrix {
 			}
 	     }
 	 }
-
+	
+	public void multiplyThreading(Matrix leftMatrix, Matrix rightMatrix, int threadsNumber)throws IllegalArgumentException {
+		if (threadsNumber <= 0) {
+            throw new IllegalArgumentException("Cores number cannot be non-positive!");
+        } 
+		Thread threads[] = new Thread[threadsNumber];
+		Matrix = new double[leftMatrix.getRow()][rightMatrix.getCol()];
+	     
+	     //creating the threads
+		for (int i = 0; i < threadsNumber; i++) {
+			final int numberOfCurrentThread = i;
+			threads[i] = new Thread(){
+				public void run(){
+					//multiplyCore
+					multiplyCore(leftMatrix, rightMatrix, threadsNumber, numberOfCurrentThread);	 
+					//multiplyCore
+				}
+			};
+	     }
+	     //start every threads
+	     for (Thread thread : threads) {
+			thread.start();
+	     }
+	     //join every threads
+	     for (Thread thread : threads) {
+	    	 try {
+	    		 thread.join();
+	    	 } catch (InterruptedException e) {
+	    		 e.getMessage();
+	    	 }
+	     }
+	 }
+	
 	public boolean equals(Matrix m) {
 		if (this == m)
 			return true;
