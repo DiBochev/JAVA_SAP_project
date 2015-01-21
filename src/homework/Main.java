@@ -8,7 +8,6 @@ public class Main {
 	public static void main(String[] args) {
 		Matrix left = new Matrix();
 		Matrix right = new Matrix();
-		Matrix resultSAP = new Matrix();
 		Matrix result = new Matrix();
 		Matrix asynch = new Matrix();
 		Matrix asynchWithThreadChoise = new Matrix();
@@ -16,15 +15,13 @@ public class Main {
 		Matrix asynchWithPool = new Matrix();
 		String pathToLeftMatrix = "D:\\left";
 		String pathToRightMatrix = "D:\\right";
-		String pathToResultSAPMatrix = "D:\\resultSAP";
 		
 		
 		System.out.println("loading files");
 		long time = System.currentTimeMillis();
 		left.setPath(pathToLeftMatrix);
 		right.setPath(pathToRightMatrix);
-		resultSAP.setPath(pathToResultSAPMatrix);
-		Matrix[] matrix = {left, right, resultSAP};
+		Matrix[] matrix = {left, right};
 		try {
 			IOFileManager.loadMatrixAsynch(matrix);
 		} catch (IllegalArgumentException | IOException e1) {
@@ -34,6 +31,8 @@ public class Main {
 		System.out.println("loaded files for: " + (System.currentTimeMillis() - time) + " ms");
 		
 		
+		
+		System.out.println("start linear multiply");
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			result.linearMultiply(left, right);						
@@ -41,6 +40,8 @@ public class Main {
 		System.out.println("time for linear multiply: " + ((System.currentTimeMillis() - time) / 10));
 		
 		
+		
+		System.out.println("start thread multiply (threds numer = left matrix row number)");
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			asynch.multiplyThreading(left, right);						
@@ -48,14 +49,17 @@ public class Main {
 		System.out.println("time for threads multiply: " + (System.currentTimeMillis() - time) / 10);
 		
 		
+		
+		System.out.printf("start threads multiply for %d threads\n", 4);
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			asynchWithThreadChoise.multiplyThreading(left, right, 4);						
 		}
-		System.out.printf("time for %d threads multiply: " + (System.currentTimeMillis() - time) / 10, 4);
-		System.out.println();
+		System.out.printf("time for %d threads multiply: " + (System.currentTimeMillis() - time) / 10 + "\n", 4);
+
+
 		
-		
+		System.out.println("start multiply (number of cores = number of threads");
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			asynchWithThreadDefaultCores.multiplyThreadingDefaultCores(left, right);						
@@ -63,6 +67,8 @@ public class Main {
 		System.out.println("time for default threads multiply: " + (System.currentTimeMillis() - time) / 10);
 		
 		
+		
+		System.out.printf("start multiply with pool for %d threads\n", 8);
 		time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) {
 			try{
@@ -74,17 +80,13 @@ public class Main {
 		System.out.println("time for pool: " + (System.currentTimeMillis() - time));
 		
 		
-		System.out.println("\n");
-		System.out.println("result and resultSAP " + result.equals(resultSAP));
-		System.out.println("asynch and resultSAP " + asynch.equals(resultSAP));
-		System.out.println("result and asynch " + result.equals(asynch));
-		System.out.println("asynchWithThreadChoise and resultSAP " + asynchWithThreadChoise.equals(resultSAP));
-		System.out.println("asynch with pool and SAP " + asynchWithPool.equals(resultSAP));
 		
 		try {
 			IOFileManager.saveMatrix("D:\\result2", result);
+			System.out.println("result saved");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("end program");
 	}
 }

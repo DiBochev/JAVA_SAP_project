@@ -108,9 +108,7 @@ public class Matrix {
 			final int numberOfCurrentThread = i;
 			threads[i] = new Thread(){
 				public void run(){
-					//multiplyCore
 					multiplyCore(leftMatrix, rightMatrix, threadsNumber, numberOfCurrentThread);	 
-					//multiplyCore
 				}
 			};
 	     }
