@@ -76,13 +76,7 @@ public class Matrix {
 	    	 pool.submit(new Runnable() {
 	    		 private int numberOfThread = i2;
 	    		 public void run() {
-	    			 for (int i = numberOfThread; i < leftMatrix.getRow(); i+= threadsNumber) {
-	    				 for (int k = 0; k < leftMatrix.getCol(); k++) {
-	    					 for (int j = 0; j < rightMatrix.getCol(); j++) {
-	    						 Matrix[i][j] = Matrix[i][j] + leftMatrix.getMatrix()[i][k] * rightMatrix.getMatrix()[k][j];
-	    					 }
-	    				 }
-	    			 }
+	    			 multiplyCore(leftMatrix, rightMatrix, threadsNumber, numberOfThread);
 	    		 }
 	    	 });
 	     }

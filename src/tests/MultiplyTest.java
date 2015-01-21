@@ -33,6 +33,12 @@ public class MultiplyTest {
 	}
 	
 	@Test
+	public void multiplyThreadingPoolTest(){
+		testResult.multiplyPool(simpleTestMatrix1, simpleTestMatrix2, 8);
+		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
+	}
+	
+	@Test
 	public void multiplyThreadingTestWithThreadsNumber(){
 		testResult.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2, 2);
 		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
