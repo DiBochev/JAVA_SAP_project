@@ -3,23 +3,20 @@ package homework;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
 public final class IOFileManager {
-	
-	private IOFileManager(){
+
+	private IOFileManager() {
 	}
-	
-	public static void loadMatrixAsynch(Matrix[] matrix) throws IllegalArgumentException, IOException {
+
+	public static void loadMatrixAsynch(Matrix[] matrix) throws IOException {
 		Thread[] threadArray = new Thread[matrix.length];
 		for (int i = 0; i < threadArray.length; i++) {
 			final int CurrentThread = i;
-			if (matrix[CurrentThread].getPath() == null) {
-				throw new IllegalArgumentException("matrix " + CurrentThread + " has no path");
-			}
-			threadArray[i] = new Thread(){
+			threadArray[i] = new Thread() {
 				public void run() {
 					try {
 						matrix[CurrentThread].setMatrix(loadMatrix(matrix[CurrentThread].getPath()));
@@ -41,9 +38,10 @@ public final class IOFileManager {
 			}
 		}
 	}
-	
-	private static double[][] loadMatrix(String path) throws IOException {
-		DataInputStream dis = new DataInputStream(new FileInputStream(path));;
+
+	private static double[][] loadMatrix(String path) throws IOException,
+			FileNotFoundException {
+		DataInputStream dis = new DataInputStream(new FileInputStream(path));
 		double array[][];
 		int row = dis.readInt();
 		int col = dis.readInt();
@@ -55,9 +53,10 @@ public final class IOFileManager {
 		}
 		dis.close();
 		return array;
-	}	
-	
-	public static void saveMatrix(String path, Matrix result) throws IOException{
+	}
+
+	public static void saveMatrix(String path, Matrix result)
+			throws IOException {
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(path));
 		dos.writeInt(result.getRow());
 		dos.writeInt(result.getCol());

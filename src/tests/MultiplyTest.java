@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 import homework.Matrix;
+import homework.MatrixMultiplication;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -22,31 +23,31 @@ public class MultiplyTest {
 		testResult.setMatrix(expectedResult);
 		simpleTestMatrix1.setMatrix(left);
 		simpleTestMatrix2.setMatrix(right);
-		resultMatrix.linearMultiply(simpleTestMatrix1, simpleTestMatrix2);
+		resultMatrix.setMatrix(MatrixMultiplication.linearMultiply(simpleTestMatrix1, simpleTestMatrix2));
 		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
 	}
 	
 	@Test
 	public void multiplyThreadingTest(){
-		testResult.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2);
+		testResult.setMatrix(MatrixMultiplication.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2));
 		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
 	}
 	
 	@Test
 	public void multiplyThreadingPoolTest(){
-		testResult.multiplyPool(simpleTestMatrix1, simpleTestMatrix2, 8);
+		testResult.setMatrix(MatrixMultiplication.multiplyPool(simpleTestMatrix1, simpleTestMatrix2, 8));
 		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
 	}
 	
 	@Test
 	public void multiplyThreadingTestWithThreadsNumber(){
-		testResult.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2, 2);
+		testResult.setMatrix(MatrixMultiplication.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2, 2));
 		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
 	}
 	
 	@Test
 	public void multiplyThreadingDefaultCores(){
-		testResult.multiplyThreadingDefaultCores(simpleTestMatrix1, simpleTestMatrix2);
+		testResult.setMatrix(MatrixMultiplication.multiplyThreadingDefaultCores(simpleTestMatrix1, simpleTestMatrix2));
 		assertArrayEquals(resultMatrix.getMatrix(), testResult.getMatrix());
 	}
 	
@@ -60,7 +61,7 @@ public class MultiplyTest {
 	public void multiplyThreadingTestWithErrorThreadsNumber(){
 		Throwable e = null;
 		try{
-			testResult.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2, 0);
+			testResult.setMatrix(MatrixMultiplication.multiplyThreading(simpleTestMatrix1, simpleTestMatrix2, 0));
 		}catch(IllegalArgumentException ex){
 			e = ex;
 		}

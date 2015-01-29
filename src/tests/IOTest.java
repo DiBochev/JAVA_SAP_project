@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import homework.IOFileManager;
@@ -16,12 +17,13 @@ public class IOTest {
 	public void readFileTestWronPpath(){
 		Throwable e = null;
 		Matrix[] array = {new Matrix()};
+		array[0].setPath("D:\\left1");
 		try{
 			IOFileManager.loadMatrixAsynch(array);
 		}catch(Exception ex){
 			e = ex;
 		}
-		assertTrue(e instanceof IllegalArgumentException); 
+		assertTrue(e instanceof FileNotFoundException); 
 	}
 	
 	@Test
