@@ -12,8 +12,8 @@ public class Main {
 		Matrix asynchWithThreadChoise = new Matrix();
 		Matrix asynchWithThreadDefaultCores = new Matrix();
 		Matrix asynchWithPool = new Matrix();
-		String pathToLeftMatrix = "D:\\left";
-		String pathToRightMatrix = "D:\\right";
+		String pathToLeftMatrix = "matrix\\left";
+		String pathToRightMatrix = "matrix\\right";
 		
 		System.out.println("loading files");
 		long time = System.currentTimeMillis();
@@ -80,7 +80,7 @@ public class Main {
 		
 		
 		try {
-			IOFileManager.saveMatrix("D:\\result", result);
+			IOFileManager.saveMatrix("matrix\\result", result);
 			System.out.println("result saved");
 		} catch (IOException e) {
 			e.printStackTrace();
