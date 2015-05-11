@@ -8,6 +8,9 @@ public class Main {
 		Matrix left = new Matrix();
 		Matrix right = new Matrix();
 		Matrix result = new Matrix();
+		
+		
+		
 		Matrix asynch = new Matrix();
 		Matrix asynchWithThreadChoise = new Matrix();
 		Matrix asynchWithThreadDefaultCores = new Matrix();
